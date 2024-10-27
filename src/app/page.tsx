@@ -1,5 +1,5 @@
 "use client";
-
+// shadcn-components
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "@/hooks/use-toast";
+// hooks
 import { useState, useCallback, useEffect, useRef } from "react";
+// copy icon from react-icons
 import { FaRegCopy } from "react-icons/fa6";
 
 export default function Home() {
@@ -15,14 +17,16 @@ export default function Home() {
   const [length, setLength] = useState(10);
   const [number, setNumber] = useState(false);
   const [character, setCharacter] = useState(false);
+  // used useRef for Accessing "Input" and preventing from rerendering.
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
+  // main password generating function and wrapped this in useCallback to prevent Unnecessary rerenders and added depedency array
   const passwordGen = useCallback(() => {
     let returnable = "";
     let strings = "qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM";
     const numbers = "1234567890";
     const characters = "!@#$%&*";
-
+    // checking the values if true "numbers or characters" will be added to 'strings"
     if (character) strings += characters;
     if (number) strings += numbers;
 
@@ -34,6 +38,7 @@ export default function Home() {
     setPassword(returnable);
   }, [length, number, character]);
 
+  // wrapped passwordGen() function in useeffect
   useEffect(() => {
     passwordGen();
   }, [passwordGen, length, number, character]);
@@ -43,6 +48,7 @@ export default function Home() {
     passwordRef.current?.select();
     // and this line is copng the password
     window.navigator.clipboard.writeText(password);
+    // shaddcn toast that will triger afer copying
     toast({
       title: "Password copied",
       description: "The generated password has been copied !!. ok ;)",
@@ -67,6 +73,7 @@ export default function Home() {
               id="password"
               value={password}
               readOnly
+              // referece of useRef()""
               ref={passwordRef}
             />
             <Button
@@ -88,10 +95,12 @@ export default function Home() {
               id="length"
               min={6}
               max={20}
-              step={1}
-              value={[length]}
-              onValueChange={(value) => setLength(value[0])}
+              defaultValue={[length]}
+              // is "e" men current value array men mile gi
+              onValueChange={(e) => setLength(e[0])}
             />
+            
+
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox
